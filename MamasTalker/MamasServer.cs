@@ -27,6 +27,7 @@ namespace MamasTalker.Server
             {
                 try
                 {
+                    // ToDo: Figure a way to accept client connections async at the best way.
                     var client = _server.AcceptTcpClient();
                     Console.WriteLine($"{client.Client.RemoteEndPoint} connected!");
                     data = null;
