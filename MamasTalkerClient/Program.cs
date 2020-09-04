@@ -6,7 +6,8 @@ namespace MamasTalkerClient
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            MamasClient client = new MamasClient("127.0.0.1", 8844);
+            client.Run();
         }
     }
 }
