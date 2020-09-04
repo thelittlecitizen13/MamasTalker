@@ -43,16 +43,22 @@ namespace MamasTalker.Server
                         NetworkStream nwStream = client.GetStream();
                         byte[] buffer = new byte[client.ReceiveBufferSize];
 
-                        //---read incoming stream---
-                        int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
+                        string dataReceived;
 
-                        //---convert the data received into a string---
-                        string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                        Console.WriteLine("Received : " + dataReceived);
+                        do
+                        {
+                            //---read incoming stream---
+                            int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
 
-                        //---write back the text to the client---
-                        Console.WriteLine("Sending back : " + dataReceived);
-                        nwStream.Write(buffer, 0, bytesRead);
+                            //---convert the data received into a string---
+                            dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                            Console.WriteLine("Received : " + dataReceived);
+
+                            //---write back the text to the client---
+                            Console.WriteLine("Sending back : " + dataReceived);
+                            nwStream.Write(buffer, 0, bytesRead);
+                        }
+                        while (dataReceived.ToLower() != "exit");
                         //ToDo: to send & recieve repeatedly, should find a way to loop the send & receive 
                         //      and take the client.close() out of the loop
                         client.Close();
