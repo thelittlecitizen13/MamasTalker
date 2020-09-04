@@ -21,11 +21,12 @@ namespace MamasTalkerClient
             TcpClient client = new TcpClient(_serverAddress.ToString(), _port);
             try
             {
+                NetworkStream nwStream = client.GetStream();
                 //ToDo: Figure the best way to send and recieve repeatedly (not to stop after one send);
                 //ToDo: Test if the server can send data to the client, without recieving data from client first
                 while (true)
                 {
-                    NetworkStream nwStream = client.GetStream();
+                    
                     string textToSend = "a";
                     byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(textToSend);
 

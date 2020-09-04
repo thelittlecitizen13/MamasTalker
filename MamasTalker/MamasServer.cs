@@ -53,6 +53,8 @@ namespace MamasTalker.Server
                         //---write back the text to the client---
                         Console.WriteLine("Sending back : " + dataReceived);
                         nwStream.Write(buffer, 0, bytesRead);
+                        //ToDo: to send & recieve repeatedly, should find a way to loop the send & receive 
+                        //      and take the client.close() out of the loop
                         client.Close();
                     }, null);
                 }
