@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Drawing.Imaging;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
+using Common;
 
 namespace MamasTalkerClient
 {
@@ -26,7 +30,7 @@ namespace MamasTalkerClient
                 //ToDo: Test if the server can send data to the client, without recieving data from client first
                 while (true)
                 {
-                    
+
                     //string textToSend = "a";
                     //byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(textToSend);
 
@@ -35,12 +39,16 @@ namespace MamasTalkerClient
                     //nwStream.Write(bytesToSend, 0, bytesToSend.Length);
 
                     //---read  the text---
-                    byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-                    int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-                    Console.WriteLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
+                    IFormatter formatter = new BinaryFormatter();
+                    while (true)
+                    {
+                        MessageData data = (MessageData)formatter.Deserialize(nwStream);
+                        data.bitmap.Save(@"C:\Users\thelittlecitizen13\Desktop\Images\client\" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
+                        Console.WriteLine("Image Recieved");
+                    }
 
-                    
-                }
+
+                    }
             }
             catch (Exception e)
             {
