@@ -31,26 +31,24 @@ namespace MamasTalker.Server
             {
                 while (true)
                 {
-                    TcpClient client = _server.AcceptTcpClient();
-
-                    Console.WriteLine("Connected to: {0}:{1} ",
-                        ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(),
-                        ((IPEndPoint)client.Client.RemoteEndPoint).Port.ToString());
-                    object obj = new object();
-                    ThreadPool.QueueUserWorkItem(obj =>
+                    using (TcpClient client = _server.AcceptTcpClient())
                     {
-                        NetworkStream nwStream = client.GetStream();
-                        MessageData data = new MessageData(takeScreenShot());
-                        IFormatter formatter = new BinaryFormatter();
-                        while (true)
+                        printClientConnection(client);
+
+                        object obj = new object();
+                        ThreadPool.QueueUserWorkItem(obj =>
                         {
-                            formatter.Serialize(nwStream, data);
-                            Thread.Sleep(1000);
-                            data.bitmap = takeScreenShot();
-                            Thread.Sleep(10000);
-                        }
-                        client.Close();
-                    }, null);
+                            NetworkStream nwStream = client.GetStream();
+                            IFormatter formatter = new BinaryFormatter();
+                            while (true)
+                            {
+                                MessageData data= new MessageData(takeScreenShot());
+                                formatter.Serialize(nwStream, data);
+                                Thread.Sleep(10000);
+                            }
+
+                        }, null);
+                    }
                 }
             }
             catch (SocketException e)
@@ -63,6 +61,12 @@ namespace MamasTalker.Server
                 _server.Stop();
             }
 
+        }
+        private void printClientConnection(TcpClient client)
+        {
+            Console.WriteLine("Connected to: {0}:{1} ",
+                           ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(),
+                           ((IPEndPoint)client.Client.RemoteEndPoint).Port.ToString());
         }
         private Bitmap takeScreenShot()
         {
