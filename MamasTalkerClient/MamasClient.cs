@@ -14,7 +14,7 @@ namespace MamasTalkerClient
     {
         private IPAddress _serverAddress;
         private int _port;
-        
+
         public MamasClient(string address, int port)
         {
             _serverAddress = IPAddress.Parse(address);
@@ -25,30 +25,13 @@ namespace MamasTalkerClient
             TcpClient client = new TcpClient(_serverAddress.ToString(), _port);
             try
             {
-                NetworkStream nwStream = client.GetStream();
-                //ToDo: Figure the best way to send and recieve repeatedly (not to stop after one send);
-                //ToDo: Test if the server can send data to the client, without recieving data from client first
-                while (true)
+                using (NetworkStream nwStream = client.GetStream())
                 {
-
-                    //string textToSend = "a";
-                    //byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(textToSend);
-
-                    ////---send the text---
-                    //Console.WriteLine("Sending : " + textToSend);
-                    //nwStream.Write(bytesToSend, 0, bytesToSend.Length);
-
-                    //---read  the text---
-                    IFormatter formatter = new BinaryFormatter();
                     while (true)
                     {
-                        MessageData data = (MessageData)formatter.Deserialize(nwStream);
-                        data.bitmap.Save(@"C:\Users\thelittlecitizen13\Desktop\Images\client\" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
-                        Console.WriteLine("Image Recieved");
+                        receiveImage(nwStream);
                     }
-
-
-                    }
+                }
             }
             catch (Exception e)
             {
@@ -56,9 +39,16 @@ namespace MamasTalkerClient
             }
             finally
             {
-                //ToDo: Figure out a way to terminate client
                 client.Close();
             }
+        }
+        private void receiveImage(NetworkStream nwStream)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            MessageData data = (MessageData)formatter.Deserialize(nwStream);
+            // Important - the path have to be valid to be able to save the image
+            data.bitmap.Save(@"C:\Users\thelittlecitizen13\Desktop\Images\client\" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
+            Console.WriteLine("Image Recieved");
         }
     }
 }

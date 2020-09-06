@@ -24,47 +24,24 @@ namespace MamasTalker.Server
         }
         public void Run()
         {
-
             _server.Start();
             Console.WriteLine($"Listening at {_server.LocalEndpoint}. Waiting for connections.");
 
             try
             {
-                // ToDo: Figure a way to accept client connections async at the best way.
                 while (true)
                 {
-                    //---incoming client connected---
                     TcpClient client = _server.AcceptTcpClient();
 
                     Console.WriteLine("Connected to: {0}:{1} ",
                         ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(),
                         ((IPEndPoint)client.Client.RemoteEndPoint).Port.ToString());
-
-
                     object obj = new object();
                     ThreadPool.QueueUserWorkItem(obj =>
                     {
-                        //---get the incoming data through a network stream---
                         NetworkStream nwStream = client.GetStream();
-                        //byte[] buffer = new byte[client.ReceiveBufferSize];
-
-
-
-
-                        ////---read incoming stream---
-                        //int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
-
-                        ////---convert the data received into a string---
-                        //dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                        //Console.WriteLine("Received : " + dataReceived);
-
-                        //---write back the text to the client---
-                        Bitmap bitmap = takeScreenShot();
-
                         MessageData data = new MessageData(takeScreenShot());
-
                         IFormatter formatter = new BinaryFormatter();
-
                         while (true)
                         {
                             formatter.Serialize(nwStream, data);
@@ -72,8 +49,6 @@ namespace MamasTalker.Server
                             data.bitmap = takeScreenShot();
                             Thread.Sleep(10000);
                         }
-                        //ToDo: to send & recieve repeatedly, should find a way to loop the send & receive 
-                        //      and take the client.close() out of the loop - DONE!
                         client.Close();
                     }, null);
                 }
@@ -84,7 +59,6 @@ namespace MamasTalker.Server
             }
             finally
             {
-                // Stop listening for new clients.
                 Console.WriteLine("Terminating...");
                 _server.Stop();
             }
@@ -98,7 +72,8 @@ namespace MamasTalker.Server
                 g.CopyFromScreen(0, 0, 0, 0,
                 bitmap.Size, CopyPixelOperation.SourceCopy);
             }
-            bitmap.Save(@"C:\Users\thelittlecitizen13\Desktop\Images\server\printscreen" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
+            // Important - the path have to be valid to be able to save the image
+            bitmap.Save(@"C:\serverPrintScreen" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
             return bitmap;
         }
 
