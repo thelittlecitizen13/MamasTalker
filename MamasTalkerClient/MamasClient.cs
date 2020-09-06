@@ -47,7 +47,7 @@ namespace MamasTalkerClient
             IFormatter formatter = new BinaryFormatter();
             MessageData data = (MessageData)formatter.Deserialize(nwStream);
             // Important - the path have to be valid to be able to save the image
-            data.bitmap.Save(@"C:\Users\thelittlecitizen13\Desktop\Images\client\" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
+            data.bitmap.Save(@"C:\Images\" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
             Console.WriteLine("Image Recieved");
         }
     }

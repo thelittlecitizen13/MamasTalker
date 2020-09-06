@@ -31,24 +31,24 @@ namespace MamasTalker.Server
             {
                 while (true)
                 {
-                    using (TcpClient client = _server.AcceptTcpClient())
+                    TcpClient client = _server.AcceptTcpClient();
+                    
+                    printClientConnection(client);
+
+                    object obj = new object();
+                    ThreadPool.QueueUserWorkItem(obj =>
                     {
-                        printClientConnection(client);
-
-                        object obj = new object();
-                        ThreadPool.QueueUserWorkItem(obj =>
+                        NetworkStream nwStream = client.GetStream();
+                        IFormatter formatter = new BinaryFormatter();
+                        while (true)
                         {
-                            NetworkStream nwStream = client.GetStream();
-                            IFormatter formatter = new BinaryFormatter();
-                            while (true)
-                            {
-                                MessageData data= new MessageData(takeScreenShot());
-                                formatter.Serialize(nwStream, data);
-                                Thread.Sleep(10000);
-                            }
+                            MessageData data = new MessageData(takeScreenShot());
+                            formatter.Serialize(nwStream, data);
+                            Thread.Sleep(10000);
+                        }
 
-                        }, null);
-                    }
+                    }, null);
+
                 }
             }
             catch (SocketException e)
@@ -77,7 +77,7 @@ namespace MamasTalker.Server
                 bitmap.Size, CopyPixelOperation.SourceCopy);
             }
             // Important - the path have to be valid to be able to save the image
-            bitmap.Save(@"C:\serverPrintScreen" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
+            bitmap.Save(@"C:\images\serverPrintScreen" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
             return bitmap;
         }
 
