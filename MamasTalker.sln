@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MamasTalkerServer", "MamasTalker\MamasTalkerServer.csproj", "{1104229B-2E56-4522-A277-E0893E2BC7C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MamasTalkerClient", "MamasTalkerClient\MamasTalkerClient.csproj", "{9182574E-A984-44F4-903A-A1999BA4FA87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MamasTalkerClient", "MamasTalkerClient\MamasTalkerClient.csproj", "{9182574E-A984-44F4-903A-A1999BA4FA87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{B1F0A81A-E662-4095-A9A2-8E0920B7F5EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9182574E-A984-44F4-903A-A1999BA4FA87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9182574E-A984-44F4-903A-A1999BA4FA87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9182574E-A984-44F4-903A-A1999BA4FA87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1F0A81A-E662-4095-A9A2-8E0920B7F5EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1F0A81A-E662-4095-A9A2-8E0920B7F5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1F0A81A-E662-4095-A9A2-8E0920B7F5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1F0A81A-E662-4095-A9A2-8E0920B7F5EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

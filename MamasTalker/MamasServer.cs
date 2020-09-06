@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -41,26 +43,37 @@ namespace MamasTalker.Server
                     {
                         //---get the incoming data through a network stream---
                         NetworkStream nwStream = client.GetStream();
-                        byte[] buffer = new byte[client.ReceiveBufferSize];
+                        //byte[] buffer = new byte[client.ReceiveBufferSize];
 
-                        string dataReceived;
+                        
 
                         do
                         {
-                            //---read incoming stream---
-                            int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
+                            ////---read incoming stream---
+                            //int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
 
-                            //---convert the data received into a string---
-                            dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                            Console.WriteLine("Received : " + dataReceived);
+                            ////---convert the data received into a string---
+                            //dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                            //Console.WriteLine("Received : " + dataReceived);
 
                             //---write back the text to the client---
-                            Console.WriteLine("Sending back : " + dataReceived);
-                            nwStream.Write(buffer, 0, bytesRead);
+                            Bitmap bitmap = takeScreenShot();
+                            
+                            MessageData data = new MessageData(takeScreenShot());
+
+                            IFormatter formatter = new BinaryFormatter();
+
+                            while (true)
+                            {
+                                formatter.Serialize(stream, data);
+                                Thread.Sleep(1000);
+                                data.GetNewImage();
+                            }
+                            Thread.Sleep(10000);
                         }
-                        while (dataReceived.ToLower() != "exit");
+                        while (true);
                         //ToDo: to send & recieve repeatedly, should find a way to loop the send & receive 
-                        //      and take the client.close() out of the loop
+                        //      and take the client.close() out of the loop - DONE!
                         client.Close();
                     }, null);
                 }
@@ -77,8 +90,20 @@ namespace MamasTalker.Server
             }
 
         }
+        private Bitmap takeScreenShot()
+        {
+            using var bitmap = new Bitmap(1920, 1080);
+            using (var g = Graphics.FromImage(bitmap))
+            {
+                g.CopyFromScreen(0, 0, 0, 0,
+                bitmap.Size, CopyPixelOperation.SourceCopy);
+            }
+            bitmap.Save(@"C:\Temp\printscreen" + Guid.NewGuid() + ".jpg", ImageFormat.Jpeg);
+            return bitmap;
+        }
 
-            
+
+
 
     }
 }

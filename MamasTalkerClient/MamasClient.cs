@@ -27,19 +27,19 @@ namespace MamasTalkerClient
                 while (true)
                 {
                     
-                    string textToSend = "a";
-                    byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(textToSend);
+                    //string textToSend = "a";
+                    //byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(textToSend);
 
-                    //---send the text---
-                    Console.WriteLine("Sending : " + textToSend);
-                    nwStream.Write(bytesToSend, 0, bytesToSend.Length);
+                    ////---send the text---
+                    //Console.WriteLine("Sending : " + textToSend);
+                    //nwStream.Write(bytesToSend, 0, bytesToSend.Length);
 
-                    //---read back the text---
+                    //---read  the text---
                     byte[] bytesToRead = new byte[client.ReceiveBufferSize];
                     int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
                     Console.WriteLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
 
-                    Thread.Sleep(1000);
+                    
                 }
             }
             catch (Exception e)
